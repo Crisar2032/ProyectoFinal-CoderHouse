@@ -17,7 +17,7 @@ export const createProduct = async (req: Request, res: Response) => {
     let item = req.body;
     const product = new Product("", Date.now(), item.name, item.description, item.code, item.photo, item.price, item.stock)
     const result = await containerProducts.save(product)
-    return res.json({ message: 'Product added', product: result });
+    return res.json({ message: 'Product created', product: result });
 }
 
 export const updateProduct = async (req: Request, res: Response) => {

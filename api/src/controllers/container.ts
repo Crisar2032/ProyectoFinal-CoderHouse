@@ -12,7 +12,8 @@ class Container {
         let contObj = JSON.parse(content);
         let newId;
         if (contObj.length > 0) {
-            newId = contObj.length + 1;
+            const itemsId = contObj.map((p: any) => p.id);
+            newId = Math.max(...itemsId) + 1;
         } else {
             newId = 1;
         }
@@ -35,13 +36,20 @@ class Container {
         return result;
     }
 
-    async updateById(req: Request, item: any) {
-        let { id } = req.params;
+    async updateById(req: Request, res: Response) {
+
+        const id = req.params.id;
+        const item = req.body;
         let contObj = await this.getAll();
-        contObj.splice(parseInt(id) - 1, 1, item)
-        await this.deleteAll()
-        await fs.promises.writeFile(this.file, JSON.stringify(contObj));
-        return (item);
+        const idx = contObj.findIndex((p: any) => p.id == id);
+
+        if (idx === -1) {
+            return false;
+        } else {
+            contObj.splice(idx, 1, item);
+            await fs.promises.writeFile(this.file, JSON.stringify(contObj));
+            return true
+        }
     }
 
     async deleteById(req: Request, res: Response) {
@@ -52,8 +60,8 @@ class Container {
         if (idx === -1) {
             return false;
         }
-        
-        contObj.splice(idx, 1);
+
+        req.body ? contObj.splice(idx, 1, req.body) : contObj.splice(idx, 1);
         await fs.promises.writeFile(this.file, JSON.stringify(contObj));
 
         return true;

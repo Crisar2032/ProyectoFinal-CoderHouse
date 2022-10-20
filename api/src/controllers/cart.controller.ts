@@ -1,51 +1,88 @@
 import { Response, Request } from 'express';
-import Container from './container'
-import Cart from '../models/product';
+import Container from './container';
+import Cart from '../models/cart';
+import Product from '../models/product';
 
 
 const containerCarts = new Container('../api/src/cart.txt');
-
-////////TO DO: Implementar lógica de las funciones. Solo están creadas las funciones con logica de productController//////////////////
+const containerProducts = new Container('../api/src/product.txt');
 
 export const createCart = async (req: Request, res: Response) => {
     let item = req.body;
-    //const product = new Product("", Date.now(), item.name, item.description, item.code, item.photo, item.price, item.stock)
-   // const result = await containerCarts.save(product)
-    //return res.json({ message: 'Product added', product: result });
+    const cart = new Cart("", Date.now(), item.products);
+    const result = await containerCarts.save(cart)
+    return res.json({ message: 'Cart created', cart: result });
 }
 
 
-export const deleteCart = async( req:Request, res: Response) =>{
-    const result = await containerCarts.deleteById(req,res);
+export const deleteCart = async (req: Request, res: Response) => {
+    const result = await containerCarts.deleteById(req, res);
     if (!result) {
-       return res.json({message:'The product you want to delete does not exist.'})
+        return res.json({ message: 'The cart you want to delete does not exist.' })
     }
-    return res.json({message:`Deleted product with id: ${req.params.id}`});
+    return res.json({ message: `Deleted cart with id: ${req.params.id}` });
 }
 
-export const getProductById = async (req: Request, res: Response) => {
-    const product = await containerCarts.getById(req, res)
-    return res.json(product);
+export const getProductsCart = async (req: Request, res: Response) => {
+    const result = await containerCarts.getById(req, res)
+    if (!result) {
+        return res.json({ message: 'Cart not found' });
+    }
+    return res.json(result);
 }
 
 export const addProductCart = async (req: Request, res: Response) => {
-    let item = req.body;
-    let p = await containerCarts.getById(req, res);
-    p.id = item.id ? item.id : p.id;
-    p.timestamp = item.timestamp? item.timestamp: p.timestamp ;
-    p.name = item.name? item.name: p.name;
-    p.description = item.description? item.description: p.description;
-    p.code = item.code? item.code: p.code;
-    p.photo = item.photo? item.photo: p.photo;
-    p.price = item.price? item.price: p.price;
-    p.stock = item.stock? item.stock: p.stock;
+    let cartId = req.params.id;
+    let productId = req.params.id_prod;
 
-    const result = await containerCarts.updateById(req, p)
-    return res.json({ message: 'Product updated', product: result });
+    let c = await containerCarts.getById(req, res);
+    req.params.id = productId;
+    let p = await containerProducts.getById(req, res);
+
+    const cart = new Cart(c.id,
+        c.timestamp,
+        c.products);
+    const product = new Product(
+        p.id,
+        p.timestamp,
+        p.name,
+        p.description,
+        p.code,
+        p.photo,
+        p.price,
+        p.stock);
+    cart.products.push(product);
+
+    req.body = cart;
+    req.params.id = cartId;
+
+    const result = await containerCarts.updateById(req, res)
+    if (!result) {
+        return res.json({ message: 'Cart not found' });
+    }
+    return res.json({ message: 'Product updated', product: cart.products[cart.products.length - 1] });
 }
 
 
 
-export const deleteProductCart = async(req:Request, res:Response)=>{
+export const deleteProductCart = async (req: Request, res: Response) => {
+    let cartId = req.params.id;
+    let productId = req.params.id_prod;
 
+    let c = await containerCarts.getById(req, res);
+    const cart = new Cart(c.id,
+        c.timestamp,
+        c.products);
+
+    let idx = cart.products.findIndex((i: any) => i.id == productId);
+
+    if (idx === -1) {
+        return res.json({ message: 'Product not found' });
+    }
+    cart.products.splice(idx, 1);
+    req.body=cart;
+
+    const result = await containerCarts.deleteById(req,res);
+
+    return res.json({ message: 'Product deleted', actualCart: cart.products });
 }

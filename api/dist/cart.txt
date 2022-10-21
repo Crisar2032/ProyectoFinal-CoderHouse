@@ -1,0 +1,1 @@
+[{"id":2,"timestamp":1666227379169,"products":[{"id":2,"timestamp":"456","name":"producto2","description":"producto de prueba","code":"4564","photo":"foto","price":20,"stock":20}]},{"id":3,"timestamp":1666230071622,"products":[]}]

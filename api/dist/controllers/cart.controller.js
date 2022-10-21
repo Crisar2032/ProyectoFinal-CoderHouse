@@ -13,11 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteProductCart = exports.addProductCart = exports.getProductsCart = exports.deleteCart = exports.createCart = void 0;
+const path_1 = __importDefault(require("path"));
 const container_1 = __importDefault(require("./container"));
 const cart_1 = __importDefault(require("../models/cart"));
 const product_1 = __importDefault(require("../models/product"));
-const containerCarts = new container_1.default('../api/src/cart.txt');
-const containerProducts = new container_1.default('../api/src/product.txt');
+const containerCarts = new container_1.default(path_1.default.join(__dirname, '../cart.txt'));
+const containerProducts = new container_1.default(path_1.default.join(__dirname, '../product.txt'));
 const createCart = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let item = req.body;
     const cart = new cart_1.default("", Date.now(), item.products);

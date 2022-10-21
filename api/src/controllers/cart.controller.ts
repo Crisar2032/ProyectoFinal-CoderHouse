@@ -4,8 +4,8 @@ import Cart from '../models/cart';
 import Product from '../models/product';
 
 
-const containerCarts = new Container('../api/src/cart.txt');
-const containerProducts = new Container('../api/src/product.txt');
+const containerCarts = new Container(__dirname+'../../cart.txt');
+const containerProducts = new Container(__dirname+'../../product.txt');
 
 export const createCart = async (req: Request, res: Response) => {
     let item = req.body;

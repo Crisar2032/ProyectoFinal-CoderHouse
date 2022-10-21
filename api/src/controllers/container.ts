@@ -36,7 +36,7 @@ class Container {
         return result;
     }
 
-    async updateById(req: Request, res: Response) {
+    async updateById(req: Request, res: Response, element?: any) {
 
         const id = req.params.id;
         const item = req.body;
@@ -46,7 +46,7 @@ class Container {
         if (idx === -1) {
             return false;
         } else {
-            contObj.splice(idx, 1, item);
+            element ? contObj.splice(idx, 1, element) : contObj.splice(idx, 1, item);
             await fs.promises.writeFile(this.file, JSON.stringify(contObj));
             return true
         }

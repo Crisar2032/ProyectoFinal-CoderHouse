@@ -9,17 +9,18 @@ router.use('/api/carritos', cartsRouter);
 
 
 router.get('/', (req, res, next) => {
-    res.send('Api funcionando correctamente');
-  });
+  res.send('Api funcionando correctamente');
+});
 
 
 
-  router.use((req, res) =>{{
+router.use((req, res) => {
+  {
     return res.status(404).send({
-        success: false,
-        message: 'Resource not found.'
-      });
-  }})
-  
+      error: -2, description: `route ${req.originalUrl} method ${req.method} not implemented`
+    });
+  }
+})
+
 
 export default router;

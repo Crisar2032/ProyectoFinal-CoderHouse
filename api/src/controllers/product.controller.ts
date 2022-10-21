@@ -3,7 +3,7 @@ import Container from './container'
 import Product from '../models/product';
 
 
-const containerProducts = new Container(__dirname+'../product.txt');
+const containerProducts = new Container('../api/src/product.txt');
 
 export const getProductById = async (req: Request, res: Response) => {
     const product = await containerProducts.getById(req, res)

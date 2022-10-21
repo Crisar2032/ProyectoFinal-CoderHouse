@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteProduct = exports.updateProduct = exports.createProduct = exports.getProductById = void 0;
 const container_1 = __importDefault(require("./container"));
 const product_1 = __importDefault(require("../models/product"));
-const containerProducts = new container_1.default('product.txt');
+const containerProducts = new container_1.default('../api/src/product.txt');
 const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const product = yield containerProducts.getById(req, res);
     if (!product) {

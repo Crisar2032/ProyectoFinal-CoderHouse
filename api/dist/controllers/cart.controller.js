@@ -16,8 +16,8 @@ exports.deleteProductCart = exports.addProductCart = exports.getProductsCart = e
 const container_1 = __importDefault(require("./container"));
 const cart_1 = __importDefault(require("../models/cart"));
 const product_1 = __importDefault(require("../models/product"));
-const containerCarts = new container_1.default('cart.txt');
-const containerProducts = new container_1.default('product.txt');
+const containerCarts = new container_1.default('../api/src/cart.txt');
+const containerProducts = new container_1.default('../api/src/product.txt');
 const createCart = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let item = req.body;
     const cart = new cart_1.default("", Date.now(), item.products);

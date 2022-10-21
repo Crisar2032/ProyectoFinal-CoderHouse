@@ -1,9 +1,10 @@
 import { Response, Request } from 'express';
+import path from 'path'
 import Container from './container'
 import Product from '../models/product';
 
 
-const containerProducts = new Container(__dirname+'../../product.txt');
+const containerProducts = new Container(path.join(__dirname,'../product.txt'));
 
 export const getProductById = async (req: Request, res: Response) => {
     const product = await containerProducts.getById(req, res)
